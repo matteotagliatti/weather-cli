@@ -18,9 +18,18 @@ func init() {
 
 func main() {
 	appid := getToken()
-	lat, lon := getGeolocation(appid)
+	q := getArgument()
+	lat, lon := getGeolocation(appid, q)
 	getWheather(appid, lat, lon)
 
+}
+
+func getArgument() string {
+	q := "Dorno"
+	if len(os.Args) >= 2 {
+		q = os.Args[1]
+	}
+	return q
 }
 
 func getToken() string {
@@ -37,8 +46,8 @@ type Geolocation [1]struct {
 	Lon float64 `json:"lon"`
 }
 
-func getGeolocation(appid string) (float64, float64) {
-	res, err := http.Get("http://api.openweathermap.org/geo/1.0/direct?q=Dorno&appid=" + appid + "&lang=en&limit=1")
+func getGeolocation(appid string, location string) (float64, float64) {
+	res, err := http.Get("http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&appid=" + appid + "&lang=en&limit=1")
 
 	if err != nil {
 		panic(err) // stop the program and print out error
